@@ -44,5 +44,5 @@ summ = 0
 while cnt <= int(n)-1:
     summ = summ + (p[0,cnt] * ycol[cnt])
     cnt += 1
-print(summ)
+print('The value of f(',s,') using Lagrange Interpolation Method is',summ,'@',min(xcol),'<x<',max(xcol))
 
