@@ -1,0 +1,48 @@
+import numpy as np
+import pandas as pd
+
+n = input('Input the number of points n: ')
+s = input('Input the value of x to be approximated: ')
+
+given = {'x':[1,2,3,4], 'fx':[1,-2,2,3]}
+table = pd.DataFrame(given, columns = ['x','fx'])
+values = 0
+
+#finding the points
+diff = list()
+q = 1
+for i in range(4) :
+    d = abs(float(s) - q)
+    diff.append(float(d))
+    q += 1
+    
+table['diff'] = np.array(diff)
+table = table.sort_values(by ='diff' ).reset_index().drop(columns = ['index','diff']).drop(table.index[int(n):]).sort_values(by = 'x').reset_index().drop(columns = 'index')
+xcol = table.filter(items = 'x').to_numpy()
+ycol = table.filter(regex = 'fx').to_numpy()
+p = np.ones((1,int(n)))
+
+cnt = 0
+num = int(n) - 1
+while cnt <= num:
+    k = 1
+    while k <= cnt:
+        if (xcol[cnt]-xcol[k-1]) != 0:
+            p[0,cnt] = p[0,cnt] * (float(s)-xcol[k-1])/(xcol[cnt]-xcol[k-1])
+        
+        k += 1
+    k = cnt + 1      
+    while k <= num:
+        if (xcol[cnt]-xcol[k]) != 0:
+            p[0,cnt] = p[0,cnt] * (float(s)-xcol[k])/(xcol[cnt]-xcol[k])
+      
+        k += 1 
+    cnt+= 1
+
+cnt = 0 
+summ = 0
+while cnt <= int(n)-1:
+    summ = summ + (p[0,cnt] * ycol[cnt])
+    cnt += 1
+print(summ)
+
