@@ -1,0 +1,70 @@
+import sympy as sym
+
+s = input('Input value of x to be approximated: ')
+z = float(s)
+
+x = [1,2,3,4]
+y = [1,-2,2,3]
+##initiation of variables
+sumx = 0
+sumy = 0 
+sumx2 = 0
+sumx3 = 0
+sumx4 = 0 
+sumx5 = 0
+sumx6 = 0
+sumxy = 0
+sumx2y = 0
+sumx3y = 0
+cnt = 0
+
+while cnt < 4:
+    sumx = sumx + x[cnt]
+    sumx2 = sumx2 + (x[cnt]**2)
+    sumx3 = sumx3 + (x[cnt]**3)
+    sumx4 = sumx4 + (x[cnt]**4)
+    sumx5 = sumx5 + (x[cnt]**5)
+    sumx6 = sumx6 + (x[cnt]**6)
+    sumy = sumy + y[cnt]
+    sumxy = sumxy + (x[cnt]*y[cnt])
+    sumx2y = sumx2y + ((x[cnt]**2)*y[cnt])
+    sumx3y = sumx3y + ((x[cnt]**3)*y[cnt])
+    cnt +=1
+    
+##Linear Least Square
+a = sym.Symbol('a')
+b = sym.Symbol('b')
+
+eq1 = sym.Eq(a*sumx + b*len(x) - sumy)
+eq2 = sym.Eq(a*sumx2 + b*sumx - sumxy)
+solve1 = sym.solve((eq1,eq2),(a,b))
+linear = solve1[a]*z + solve1[b]
+
+##Quadratic Least Square
+c = sym.Symbol('c')
+d = sym.Symbol('d')
+e = sym.Symbol('e')
+
+eq3 = sym.Eq(c*sumx2 + d*sumx + e*len(x) - sumy)
+eq4 = sym.Eq(c*sumx3 +d*sumx2 + e*sumx - sumxy)
+eq5 = sym.Eq(c*sumx4 +d*sumx3 + e*sumx2 - sumx2y)
+solve2 = sym.solve((eq3,eq4,eq5),(c,d,e))
+quadratic = solve2[c]*(z**2) + solve2[d]*(z) + solve2[e]
+
+##Cubic Least Square    
+f = sym.Symbol('f')
+g = sym.Symbol('g')
+h = sym.Symbol('h')
+i = sym.Symbol('i')
+
+eq6 = sym.Eq(f*sumx3 +g*sumx2 + h*sumx + i*len(x) - sumy)
+eq7 = sym.Eq(f*sumx4 +g*sumx3 + h*sumx2 + i*sumx - sumxy)
+eq8 = sym.Eq(f*sumx5 +g*sumx4 + h*sumx3 + i*sumx2 - sumx2y)
+eq9 = sym.Eq(f*sumx6 +g*sumx5 + h*sumx4 + i*sumx3 - sumx3y)
+solve3 = sym.solve((eq6,eq7,eq8,eq9),(f,g,h,i))
+cubic = solve3[f]*(z**3) + solve3[g]*(z**2) + solve3[h]*(z) + solve3[i]
+##End of Least Square Method
+
+print('The value of f(',s,') using Linear Approximation is ',linear)
+print('The value of f(',s,') using Quadratic Approximation is ',quadratic)
+print('The value of f(',s,') using Cubic Approximation is ',cubic)
